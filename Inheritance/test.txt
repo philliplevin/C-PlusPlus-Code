@@ -1,0 +1,7 @@
+
+Jeff Goldblum is a Person
+Phillip is a Student
+Michael Scott is a Employee
+Richard P. Feynman is a Faculty
+Donald Trump is a Staff
+

@@ -1,0 +1,130 @@
+// Phillip Levin, Rachel Soper
+// Infix to postfix expression conversion
+
+// This program takes a user-inputted pre-fix expression and returns the post-fix version of the expression
+
+// Valid operands are single digits and characters: 0-9 a-z A-Z
+// Valid operators are: + - * / ( )
+// Highest precedence: * /
+// Lowest precedence: + -
+// ( has lowest precedence on the stack and highest precedence outside of stack.
+// ) never goes on stack.
+// Bottom of the stack has the lowest precedence than any operator.
+// prec() function is used to compare the precedence of the op
+
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+// Global variables
+// stack1 is a global variable used to store operators by order-of-input and is used in both main() and prec()
+stack<char> stack1;
+
+// Functions
+// prec() determines the precedence level of x, and can be used to compare operator precedence
+int prec(char x)
+{
+	if(x == '(' && stack1.top() == '(')
+	{
+		// If x is on the stack and is '(' it is the lowest precedence
+		return 0;
+	}
+	else if(x == '+' || x == '-')
+	{
+		// Other than '(' on the stack, '+' and '-' are the lowest precedence operators
+		return 1;
+	}
+	else
+	{
+		// x must be a '*' or '/' operator, which has the highest precedence
+		return 2;
+	}
+}
+
+int main()
+{
+	// When program starts, the user is asked for a pre-fix expression
+	
+	string input; // User input is stored here
+	char index; // Used to keep track of index position of the string input from user
+	
+	cout << "Intput a pre-fix expression to have converted to a post-fix expression" << endl;
+	getline(cin, input);
+	cout << input[1] << endl;
+	
+	/* User input must be converted to post-fix expression. This for-loop repeats until each 
+	index of the string input has been checked and processed appropriatley, printing each 
+	operand and operator in the correct order */
+	for(int y = 0; y != input.length(); ++y)
+	{
+		index = input[y]; // Current char value of string re-assigned for easier reading comprhenesion
+		if (index == ' ')
+		{
+			/* Since this index value of the string is an empty space, the next index
+			value of the string should be used instead. This iteration of the loop ends so that the next index value can be evaluated instead */
+			
+		}
+		else if (index != '+' && index != '-' && index != '*' && index != '/' && index != '(' && index != ')')
+		{
+			// The input must be an operand and is printed
+			cout << index << " ";
+		}
+		else
+		{
+			if (index == '(')
+			{
+				// ’(’ has lowest precedence in the stack, highest outside
+				stack1.push(index);
+			}
+			else if(index == ')')
+			{
+				while(!stack1.empty() && stack1.top() != '(')
+				{
+					cout << stack1.top() << " ";
+					stack1.pop();
+				}
+				if(!stack1.empty())
+				{
+					stack1.pop();
+				}
+				else
+				{
+						// There is no matching '('
+						cout << "ERROR " << endl; 
+				}
+			}
+			else if(stack1.empty() == true || prec(stack1.top()) < prec(index))
+			{
+				// Bottom of stack has lower precedence than everything
+				stack1.push(index);
+			}
+			else if(prec(stack1.top()) >= prec(index))
+			{
+				while((!stack1.empty()) && prec(stack1.top()) >= prec(index))
+				{
+					cout << stack1.top() << " ";
+					stack1.pop();
+					
+				}
+				stack1.push(index);
+			}
+			else
+			{
+				cout << "ERROR" << endl;
+			
+			}
+		}	
+	}
+	
+	/* There are no other operands or operators from the user-input expression, and thus 
+	the remaining elements on the stack can be printed */
+	while (!stack1.empty())
+	{
+		cout << stack1.top() << " ";
+		stack1.pop();
+	}
+	
+	cout << endl;	
+}

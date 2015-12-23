@@ -1,0 +1,4 @@
+The set algorithm took .001 seconds.
+The vector algorithm took .019 seconds.
+
+The set algorithm is faster.
